@@ -15,16 +15,14 @@ cask "floe" do
     strategy :github_latest
   end
 
-  depends_on macos: ">= :big_sur"
+  depends_on macos: :big_sur
 
   app "Floe.app"
   binary "#{appdir}/Floe.app/Contents/MacOS/floe"
 
-  postflight do
+  postflight_steps do
     # 开源免付费公证分发：自动移除浏览器/下载产生的隔离扩展属性，使普通用户双击即可直接启动
-    system_command "/usr/bin/xattr",
-                   args: ["-cr", "#{appdir}/Floe.app"],
-                   sudo: false
+    run "/usr/bin/xattr", args: ["-cr", "{{appdir}}/Floe.app"], must_succeed: false
   end
 
   zap trash: [
